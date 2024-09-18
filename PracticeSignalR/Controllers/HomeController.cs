@@ -15,6 +15,7 @@ namespace PracticeSignalR.Controllers
 
         public IActionResult Index()
         {
+            var data = "Welcome Message";
             return View();
         }
 
