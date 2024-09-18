@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
+    <title>Home</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-style: italic;
+            background: #fff;
+            min-height: 100vh;
+            background: linear-gradient(to right bottom, #273c75, #079992);
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            padding: 40px 0;
+        }
+
+        #mainImg {
+            margin: 0 auto 40px;
+            display: block;
+            height: 500px;
+            width: 800px;
+            border: 2px solid #fff;
+            box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            text-align: center;
+        }
+
+            ul li {
+                margin: 0 5px;
+                display: inline-block;
+                border: 1px solid #fff;
+                cursor: pointer;
+            }
+
+                ul li img {
+                    display: block;
+                    width: 150px;
+                    height: 100px;
+                    opacity: 0.4;
+                    transition: 0.4s;
+                    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19)
+                }
+
+                    ul li img:hover {
+                        opacity: 1;
+                    }
+
+        .toolbox {
+            position: fixed;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            width: 200px;
+        }
+
+        select {
+            padding: 5px 8px;
+            margin: 10px auto;
+            width: 130%;
+            border: none;
+            font-size: 20px;
+            width: 80px;
+            cursor: pointer;
+            font-style: italic;
+        }
+
+            select:focus {
+                outline: none;
+            }
+
+        label {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        input[type="button"] {
+            background-color: #e0e0e0;
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            margin: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-size: 24px;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 12px 0 rgba(0, 0, 0, 0.20), 0 15px 40px 0 rgba(0, 0, 0, 0.15)
+        }
+
+            input[type="button"]:hover {
+                box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+            }
+
+            input[type="button"]:disabled {
+                opacity: 0.4;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="toolbox">
+        <input id="btnStartSlideShow" type="button" value="Start" />
+        <input id="btnStopSlideShow" type="button" value="Stop" />
+    </div>
+    <div class="container">
+        <img id="mainImg" src="~/images/leaf.jfif">
+        <ul>
+            <li>
+                <img src="~/images/autumn.jfif" />
+            </li>
+            <li><img src="~/images/nature.jfif"></li>
+            <li><img src="~/images/oip.jfif"></li>
+            <li><img src="~/images/waterfall.jfif"></li>
+        </ul>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var imageURLs = new Array();
+            var intervalId;
+            var btnStart = $('#btnStartSlideShow');
+            var btnStop = $('#btnStopSlideShow');
+
+            $('ul img').each(function () {
+                imageURLs.push($(this).attr('src'));
+            });
+
+            function setImage() {
+                var mainImageElement = $('#mainImg');
+                var currentImageURL = mainImageElement.attr('src');
+                var currentImageIndex = $.inArray(currentImageURL, imageURLs);
+                if (currentImageIndex == (imageURLs.length - 1)) {
+                    currentImageIndex = -1;
+                }
+
+                mainImageElement.attr('src', imageURLs[currentImageIndex + 1])
+            }
+
+            btnStart.click(function () {
+                intervalId = setInterval(setImage, 500);
+                $(this).attr('disabled', 'disabled');
+                btnStop.removeAttr('disabled');
+            });
+
+            btnStop.click(function () {
+                clearInterval(intervalId);
+                $(this).attr('disabled', 'disabled');
+                btnStart.removeAttr('disabled');
+            }).attr('disabled', 'disabled');
+        });
+    </script>
+</body>
+</html>

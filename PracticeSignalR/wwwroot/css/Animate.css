@@ -1,0 +1,41 @@
+﻿
+@keyframes slide-in {
+    from {
+        transform: translatex(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translatex(0%);
+        opacity: 1;
+    }
+}
+
+.box {
+    animation: slide-in 1000ms;
+    animation-timing-function: ease-in-out;
+}
+.figure {
+    animation: 5s anim-figure ease-out ;
+}
+
+@keyframes anim-figure{
+    0% {
+        opacity: 0;
+        transform: translateY(80%);
+    }
+
+    20% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}

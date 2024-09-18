@@ -1,0 +1,8 @@
+﻿@model Employee
+
+<h2>Employee Information</h2>
+<p>ID: @Model.Id</p>
+<p>First Name: @Model.FirstName</p>
+<p>Last Name: @Model.LastName</p>
+
+<a asp-action="GeneratePdf" asp-controller="Pdf" class="btn btn-primary">Generate PDF</a>

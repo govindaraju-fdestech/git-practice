@@ -1,0 +1,194 @@
+﻿@* 
+
+<div class="text-center">
+    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Save">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="file" id="FileUpload1" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <img id="Image1" src="" alt="" style="display: none;" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+
+        <input type="button" id="btnCrop" value="Crop" style="display: none" />
+        <input type="submit" id="btnUpload" value="Upload" style="display: none" />
+        <input type="hidden" name="imgX1" id="imgX1" />
+        <input type="hidden" name="imgY1" id="imgY1" />
+        <input type="hidden" name="imgWidth" id="imgWidth" />
+        <input type="hidden" name="imgHeight" id="imgHeight" />
+        <input type="hidden" name="imgCropped" id="imgCropped" />
+    </form>
+    @section scripts {
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.9/js/jquery.Jcrop.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#FileUpload1').change(function () {
+                    $('#Image1').hide();
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#Image1').show();
+                        $('#Image1').attr("src", e.target.result);
+                        $('#Image1').Jcrop({
+                            onChange: SetCoordinates,
+                            onSelect: SetCoordinates
+                        });
+                    }
+                    reader.readAsDataURL($(this)[0].files[0]);
+                });
+                $('#btnCrop').click(function () {
+                    var x1 = $('#imgX1').val();
+                    var y1 = $('#imgY1').val();
+                    var width = $('#imgWidth').val();
+                    var height = $('#imgHeight').val();
+                    var canvas = $("#canvas")[0];
+                    var context = canvas.getContext('2d');
+                    var img = new Image();
+                    img.onload = function () {
+                        canvas.height = height;
+                        canvas.width = width;
+                        context.drawImage(img, x1, y1, width, height, 0, 0, width, height);
+                        $('#imgCropped').val(canvas.toDataURL());
+                        $('#btnUpload').show();
+                    };
+                    img.src = $('#Image1').attr("src");
+                });
+            });
+            function SetCoordinates(c) {
+                $('#imgX1').val(c.x);
+                $('#imgY1').val(c.y);
+                $('#imgWidth').val(c.w);
+                $('#imgHeight').val(c.h);
+                $('#btnCrop').show();
+            };
+        </script>
+    }
+
+</div>
+
+ *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CustomCrop</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+    <style>
+        .croppie-container {
+            width: 100%;
+            height: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card" style="margin-top: 10px;">
+                    <div class="card-header">Cropper in ASP.NET Core</div>
+                    <div class="card-body">
+                        <div id="main-cropper"></div>
+                        <div id="preview-cropper"></div>
+                        <input type="file" id="select" class="form-control" accept="image/*">
+                        <button id="btnupload" style="margin-top: 10px;" class="btn btn-success">Crop</button>
+                        <button id="btnrotate" style="margin-top: 10px;" class="btn btn-primary">Rotate</button>
+                        <input type="range" id="sizeRange" min="0.1" max="2" step="0.1" value="1" style="margin-top: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+   //  document.addEventListener("DOMContentLoaded", function () {
+        // Initialize the Croppie instance for the main image
+        var mainCroppie = $("#main-cropper").croppie({
+            viewport: { width: 200, height: 200, type: "circle" },
+            boundary: { width: 300, height: 300 },
+            showZoomer: true,
+            enableOrientation: true,
+        });
+
+        // Initialize the Croppie instance for the preview
+        var previewCroppie = $("#preview-cropper").croppie({
+            viewport: { width: 100, height: 100, type: "circle" },
+            boundary: { width: 150, height: 150 },
+            showZoomer: false,
+        });
+
+        // Read and bind the selected image to the main Croppie
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    mainCroppie.croppie("bind", {
+                        url: e.target.result,
+                    });
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Handle file input change event
+        $("#select").on("change", function () {
+            readFile(this);
+        });
+
+        // Handle crop and display
+        $("#btnupload").on("click", function () {
+            mainCroppie.croppie("result", {
+                type: "canvas",
+                size: { width: 100, height: 100 },
+                format: "png",
+            }).then(function (data) {
+                // Set the cropped image to the preview Croppie
+                previewCroppie.croppie("bind", { url: data });
+            });
+        });
+
+        // Handle rotation
+        $("#btnrotate").on("click", function () {
+            mainCroppie.croppie("rotate", 90);
+        });
+
+        // Handle size adjustment
+        $("#sizeRange").on("input", function () {
+            var size = parseFloat($(this).val());
+            mainCroppie.croppie("setZoom", size);
+        });
+    //});
+</script>
+

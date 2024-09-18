@@ -1,0 +1,49 @@
+﻿@model List<ChartPoint>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script>
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title: {
+                    text: "Product Trends By Month"
+                },
+                toolTip: {
+                    shared: true
+                },
+                data: [
+                    {
+                        type: "spline",
+                        name: "Desktops",
+                        showInLegend: true,
+                        dataPoints: @Html.Raw(Json.Serialize(ViewBag.DataPoints1))
+                            },
+                    {
+                        type: "spline",
+                        name: "Laptops",
+                        showInLegend: true,
+                        dataPoints: @Html.Raw(Json.Serialize(ViewBag.DataPoints2))
+                            },
+                    {
+                        type: "spline",
+                        name: "Mobiles",
+                        showInLegend: true,
+                        dataPoints: @Html.Raw(Json.Serialize(ViewBag.DataPoints3))
+                            }
+                ]
+            });
+            chart.render();
+        }
+    </script>
+</head>
+<body>
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</body>
+</html>

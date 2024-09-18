@@ -1,0 +1,118 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Multiselect Example</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Multiselect CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.min.css" rel="stylesheet" />
+
+    <style>
+        /* Hide the default select dropdown */
+        #example-getting-started {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Build your select -->
+    <select id="example-getting-started" multiple="multiple">
+        <option value="cheese">Cheese</option>
+        <option value="tomatoes">Tomatoes</option>
+        <option value="mozarella">Mozzarella</option>
+        <option value="mushrooms">Mushrooms</option>
+        <option value="pepperoni">Pepperoni</option>
+        <option value="onions">Onions</option>
+    </select>
+
+    <form asp-action="ExtractDataFromImage" asp-controller="Test" enctype="multipart/form-data">
+        <input type="file" name="postedFile" id="postedFile" />
+        <input type="submit" id="uploadFile" value="Upload" />
+        <span id="fileError"></span>
+        <hr />
+        <span>@ViewBag.Message</span>
+    </form>
+
+
+
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Multiselect JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?"></script>
+
+    <input type="button" value="Click to Display Map" onclick="DisplayGoogleMap()" />
+    <div id="myDiv" style="width:100%;height:400px;"></div>
+
+    <script type="text/javascript">
+        function DisplayGoogleMap() {
+            // Set the Latitude and Longitude of the Map
+            var myAddress = new google.maps.LatLng(24.466807, 54.384297);
+
+            // Create Options or set different Characteristics of Google Map
+            var mapOptions = {
+                center: myAddress,
+                zoom: 15,
+                minZoom: 15,
+                // mapTypeId: google.maps.MapTypeId.ROADMAP
+                // mapTypeId: google.maps.MapTypeId.SATELLITE
+               //mapTypeId: google.maps.MapTypeId.HYBRID
+                 mapTypeId: google.maps.MapTypeId.TERRAIN
+            };
+            // Display the Google map in the div control with the defined Options
+            var map = new google.maps.Map(document.getElementById("myDiv"), mapOptions);
+            // Set Marker on the Map
+            var marker = new google.maps.Marker({
+                position: myAddress,
+                animation: google.maps.Animation.BOUNCE,
+            });
+            marker.setMap(map);
+        }
+    </script>
+    <script>
+        $(document).ready(function()
+        {
+
+            $('#uploadFile').click(function(e)
+            {
+                        var fileInput = $('#postedFile');
+                        var filePath = fileInput.val();
+                        console.log(filePath)
+                    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/;
+
+                    if (!allowedExtensions.exec(filePath)) {
+                                console.log("1")
+                            $('#fileError').text('Invalid file type. Only .jpg, .jpeg, .png, .pdf are allowed.');
+                            e.preventDefault();
+                        } else {
+                            $('#fileError').text('');
+                        }
+            });
+        });
+    </script>
+    <!-- Initialize Multiselect -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#example-getting-started').multiselect({
+                includeSelectAllOption: false, // Optional: remove if not needed
+                enableFiltering: false // Optional: remove if not needed
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,61 @@
+﻿@model ImageUploadModel
+@{
+    ViewData["Title"] = "Image Upload";
+}
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ImageFile"></label>
+        <input asp-for="ImageFile" type="file" class="form-control-file" accept="image/*" />
+        <span asp-validation-for="ImageFile"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsSelfie"></label>
+        <input asp-for="IsSelfie" type="checkbox" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CropArea"></label>
+        <input asp-for="CropArea" type="text" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+<div id="crop-container">
+    <img id="image-to-crop" src="" alt="Image to Crop" />
+</div>
+
+<script>
+    var imageToCrop = document.getElementById('image-to-crop');
+    var cropContainer = document.getElementById('crop-container');
+    var inputCropArea = document.getElementById('CropArea');
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                imageToCrop.src = e.target.result;
+
+                // Initialize the cropper with options
+                var cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.5,
+                    crop: function (event) {
+                        var data = cropper.getData();
+                        inputCropArea.value = JSON.stringify(data);
+                    }
+                });
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById("ImageFile").addEventListener("change", function () {
+        readURL(this);
+    });
+</script>

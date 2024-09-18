@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Custom Context Menu";
+}
+
+<div id="customContextMenu" style="display: none; position: absolute; background-color: #fff; border: 1px solid #ccc; padding: 10px;">
+    <ul>
+        <li><a href="#" onclick="showAlert('Option 1')">Option 1</a></li>
+        <li><a href="#" onclick="showAlert('Option 2')">Option 2</a></li>
+        <li><a href="#" onclick="showAlert('Option 3')">Option 3</a></li>
+    </ul>
+</div>
+
+<div id="content" style="border: 1px solid #ccc; width: 300px; height: 200px;">
+    Right-click here to open the custom context menu.
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    // JavaScript to handle the custom context menu
+    const contextMenu = document.getElementById("customContextMenu");
+    const content = document.getElementById("content");
+
+    function showAlert(optionText) {
+        contextMenu.style.display = "none";
+        Swal.fire({
+            title: 'Option Selected',
+            text: optionText,
+            icon: 'success',
+            timer: 2000, // Adjust the timer duration in milliseconds (2 seconds in this example)
+            showConfirmButton: false
+        });
+    }
+
+    content.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        contextMenu.style.display = "block";
+        contextMenu.style.left = e.pageX + "px";
+        contextMenu.style.top = e.pageY + "px";
+    });
+
+    document.addEventListener("click", () => {
+        contextMenu.style.display = "none";
+    });
+</script>
